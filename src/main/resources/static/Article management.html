@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>文章管理</title>
+    <link rel="stylesheet" href="../layui/css/layui.css" media="all">
+</head>
+<body>
+
+<table id="demo" lay-filter="test"></table>
+<script type="text/html" id="switchTpl">
+    <!--     这里的 checked 的状态只是演示 -->
+    <input type="checkbox" name="isDelete" value="{{d.textId}}" lay-skin="switch" lay-text="是|否" lay-filter="isDelete"
+           {{ d.isDelete ? 'checked' : '' }}>
+</script>
+<script src="../layui/layui.js"></script>
+<script>
+    layui.use('table', function () {
+        const table = layui.table;
+
+        //第一个实例
+        table.render({
+            elem: '#demo'
+            , height: 472
+            , url: '/text/findAll' //数据接口
+            , page: true //开启分页
+            , cols: [[ //表头
+                {field: 'textId', title: '文章ID', width: 80, sort: true, fixed: 'left'}
+                , {field: 'title', title: '文章标题', width: 120}
+                , {field: 'text', title: '文章内容', event: 'getText', width: 120}
+                , {
+                    field: 'createTime', title: '文章发布时间', templet: function (d) {
+                        return layui.util.toDateString(d.createTime, "yyyy-MM-dd HH:mm:ss");
+                    }, width: 180
+                }
+                , {field: 'isDelete', title: '是否删除', width: 120, templet: '#switchTpl', unresize: true, sort: true}
+                , {field: 'userId', title: '发布者Id', event: 'getUsername', sort: true, width: 120}
+            ]]
+        });
+
+        layui.form.on('switch(isDelete)', function (obj) {
+            layui.$.get('text/updateById', {
+                textId: this.value
+                , isDelete: obj.elem.checked
+            }, function (v) {
+                if (v.success) {
+                    layer.tips(obj.elem.checked ? "删除该文章成功" : "恢复该文章成功", obj.othis);
+                    layui.table.cache.demo[obj.value].isDelete = !layui.table.cache.demo[obj.value].isDelete
+                } else {
+                    if (v.msg.code == 4001) {
+                        layer.tips('操作失败:' + v.msg.msg, obj.othis);
+                    } else {
+                        layer.tips('操作失败其他错误', obj.othis);
+                    }
+                }
+            }).error(e => {
+                layer.tips('系统错误,操作失败', obj.othis);
+                console.log(e)
+            });
+
+        });
+
+        table.on('tool(test)', function (obj) {
+            if (obj.event === 'getText') {
+                layer.open({
+                    title: ['文章正文', 'font-size:18px;'],
+                    type: 1,
+                    content: obj.data.text
+                })
+            }
+
+            if (obj.event === 'getUsername') {
+                layui.$.get('user/findOneByUserId/' + obj.data.userId, {}, function (v) {
+                    if (v.success) {
+                        layer.open({
+                            type: 1,
+                            title: ['作者信息', 'font-size:18px;'],
+                            content: '用户名:' + v.data.username + ' \n 用户密码:' + v.data.username
+                        });
+                    } else {
+                        switch (parseInt(v.msg.code)) {
+                            case 4001:
+                                alert('操作失败:' + v.msg.msg);
+                                break;
+                            default :
+                                alert('操作失败其他错误');
+                                break;
+                        }
+                    }
+                }).error(e => {
+                    alert('系统错误,操作失败');
+                    console.log(e)
+                });
+            }
+        });
+
+    });
+</script>
+</body>
+</html>
