@@ -21,7 +21,7 @@ public class ExceptionHandler {
 
     @ResponseBody
     @org.springframework.web.bind.annotation.ExceptionHandler({AuthorizationException.class})
-    public Result noAuthorizationException(Exception ex) {
+    public Result noAuthorizationException() {
         log.warn("\r\n该用户无权限:" + SecurityUtils.getSubject().getPrincipal() + "\t操作时间:" + ZonedDateTime.now());
         return new Result(false, Message.FAILURE_NO_PERM, null);
     }
