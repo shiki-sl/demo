@@ -12,10 +12,7 @@ import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author 孙磊
@@ -80,7 +77,7 @@ public class TextController {
 
         try {
             int i = textService.rootUpdateById(textId, isDelete);
-            if (i<=0){
+            if (i <= 0) {
                 return new Result(false, Message.FAILURE, "该文章不存在");
             }
             return new Result(true, Message.SUCCESS, "更新成功");
@@ -88,5 +85,15 @@ public class TextController {
             e.printStackTrace();
         }
         return new Result(false, Message.FAILURE, null);
+    }
+
+    @PostMapping("saveText")
+    @ResponseBody
+    public Result saveText(@RequestBody SText text) {
+        if (StringUtils.isBlank(text.getTitle())
+                || StringUtils.isBlank(text.getTitle())) {
+            return new Result(false,Message.FAILURE,"文章标题或内容不能为空");
+        }
+        return textService.saveText(text);
     }
 }

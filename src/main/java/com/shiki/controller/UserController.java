@@ -12,6 +12,7 @@ import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,7 +47,7 @@ public class UserController {
     @RequiresRoles("test")
     @GetMapping("/findOneByUserId/{userId}")
     @ResponseBody
-    public Result findOneByUserId(@PathVariable Integer userId) {
+    public Result findOneByUserId(@PathVariable Long userId) {
         if (userId == null
                 || StringUtils.isBlank(userId.toString())) {
             return new Result(false, Message.FAILURE, "文章id或删除状态为空");
@@ -92,18 +93,18 @@ public class UserController {
      */
     @GetMapping("/login")
     public ModelAndView login(Integer mark, ModelAndView mv) {
-        Map<String, String> map = new HashMap<>(16);
+        SUser user = new SUser();
         if (mark == null
                 || StringUtils.isBlank(mark.toString())) {
-            map.put("未登录,请登录", "");
             mv.setViewName("login");
-            mv.addAllObjects(map);
+            mv.addObject("未登录,请登录");
             return mv;
         }
-        map = userService.login(mark, map);
+
+        user = userService.login(mark, user);
 
         mv.setViewName("index");
-        mv.addAllObjects(map);
+        mv.addObject(user);
         return mv;
     }
 
@@ -123,4 +124,5 @@ public class UserController {
         }
         return "login";
     }
+
 }

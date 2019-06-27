@@ -22,7 +22,7 @@ public class RoleServiceImpl implements RoleService {
     private SRoleExtMapper sRoleExtMapper;
 
     @Override
-    public List<SRole> findAllByUserId(Integer userId){
+    public List<SRole> findAllByUserId(Long userId){
         return sRoleExtMapper.findAllByUserId(userId);
     }
 }

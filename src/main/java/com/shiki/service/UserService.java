@@ -1,13 +1,6 @@
 package com.shiki.service;
 
-import com.shiki.domain.dao.SUserMapper;
 import com.shiki.domain.dto.SUser;
-import com.shiki.domain.dto.SUserExample;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author 孙磊
@@ -20,7 +13,7 @@ public interface UserService {
      * @param uid
      * @return
      */
-    SUser findOneByUserId(Integer uid);
+    SUser findOneByUserId(Long uid);
 
     /**
      *
@@ -32,8 +25,8 @@ public interface UserService {
     /**
      *
      * @param mark
-     * @param map
+     * @param user
      * @return
      */
-    Map<String, String> login(Integer mark, Map<String, String> map);
+    SUser login(Integer mark, SUser user);
 }

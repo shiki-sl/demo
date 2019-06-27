@@ -22,12 +22,12 @@ public class PermsServiceImpl implements PermsService {
 
 
     @Override
-    public List<SPerms> findAllByRoleId(Integer roleId){
+    public List<SPerms> findAllByRoleId(Long roleId){
         return permsExtMapper.findAllByRoleId(roleId);
     }
 
     @Override
-    public List<String> findPermsByUserId(Integer userId){
+    public List<String> findPermsByUserId(Long userId){
         return permsExtMapper.findPermsByUserId(userId);
     }
 }

@@ -1,5 +1,6 @@
 package com.shiki.service.impl;
 
+import com.shiki.common.util.MD5util;
 import com.shiki.domain.dao.SUserMapper;
 import com.shiki.domain.dto.SUser;
 import com.shiki.domain.dto.SUserExample;
@@ -19,14 +20,13 @@ import java.util.Map;
  * @date 2019/6/20 18:37
  */
 @Service
-//@Transactional(rollbackFor = Exception.class)
 public class UserServiceImpl implements UserService {
 
     @Autowired
     private SUserMapper userMapper;
 
     @Override
-    public SUser findOneByUserId(Integer uid) {
+    public SUser findOneByUserId(Long uid) {
         return userMapper.selectByPrimaryKey(uid);
     }
 
@@ -41,28 +41,35 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<String, String> login(Integer mark, Map<String, String> map) {
+    public SUser login(Integer mark, SUser user) {
+        String username;
+        String password;
         switch (mark) {
             case 1: {
-                map.put("username", "root");
-                map.put("password", "1");
+                username = "root";
+                password = "1";
             }
             break;
             case 2: {
-                map.put("username", "test_user");
-                map.put("password", "123456");
+                username = "test_user";
+                password = "123456";
             }
             break;
             case 3: {
-                map.put("username", "user1");
-                map.put("password", "1");
+                username = "user1";
+                password = "1";
             }
             break;
             default:
+                return null;
         }
+        password = MD5util.encrypt(username, password);
+
         Subject subject = SecurityUtils.getSubject();
-        UsernamePasswordToken token = new UsernamePasswordToken(map.get("username"), map.get("password"));
+        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
         subject.login(token);
-        return map;
+        user.setUsername(username);
+        user.setPassword(password);
+        return user;
     }
 }

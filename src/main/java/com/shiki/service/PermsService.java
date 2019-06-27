@@ -17,7 +17,7 @@ public interface PermsService {
 
 
 
-     List<SPerms> findAllByRoleId(Integer roleId);
+     List<SPerms> findAllByRoleId(Long roleId);
 
-     List<String> findPermsByUserId(Integer userId);
+     List<String> findPermsByUserId(Long userId);
 }

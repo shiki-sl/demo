@@ -15,5 +15,5 @@ public interface SRoleExtMapper {
      * @param userId
      * @return
      */
-    List<SRole> findAllByUserId(Integer userId);
+    List<SRole> findAllByUserId(Long userId);
 }

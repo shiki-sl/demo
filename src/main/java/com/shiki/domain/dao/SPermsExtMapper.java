@@ -15,12 +15,12 @@ public interface SPermsExtMapper {
      * @param roleId
      * @return
      */
-    List<SPerms> findAllByRoleId(Integer roleId);
+    List<SPerms> findAllByRoleId(Long roleId);
 
     /**
      *
      * @param userId
      * @return
      */
-    List<String> findPermsByUserId(Integer userId);
+    List<String> findPermsByUserId(Long userId);
 }

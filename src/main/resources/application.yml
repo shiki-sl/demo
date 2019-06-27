@@ -19,4 +19,9 @@ spring:
 #      ddl-auto: update
 mybatis:
   #  config-location: classpath:mybatis/mybatis-config.xml
-  mapper-locations: classpath:com/shiki/domain/dao/*.xml
+  mapper-locations: classpath:mapper/*.xml
+md5:
+  prefix:
+    shiki-demo-user-username
+  suffix:
+    &password:$

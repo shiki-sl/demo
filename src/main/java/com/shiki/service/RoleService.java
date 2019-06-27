@@ -11,5 +11,5 @@ import java.util.List;
  */
 public interface RoleService {
 
-     List<SRole> findAllByUserId(Integer userId);
+     List<SRole> findAllByUserId(Long userId);
 }
