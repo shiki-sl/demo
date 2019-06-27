@@ -2,7 +2,6 @@ package com.shiki.common.Enum;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * @author 孙磊

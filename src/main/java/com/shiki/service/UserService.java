@@ -5,40 +5,35 @@ import com.shiki.domain.dto.SUser;
 import com.shiki.domain.dto.SUserExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 孙磊
  * @description
  * @date 2019/6/20 18:37
  */
-@Service
-//@Transactional(rollbackFor = Exception.class)
-public class UserService {
+public interface UserService {
+    /**
+     *
+     * @param uid
+     * @return
+     */
+    SUser findOneByUserId(Integer uid);
 
-    @Autowired
-    private  SUserMapper userMapper;
+    /**
+     *
+     * @param username
+     * @return
+     */
+    SUser findOneByUsername(String username);
 
-
-
-    public List<SUser> findAll() {
-        return userMapper.selectByExample(null);
-    }
-
-    public SUser findOneByUserId(Integer uid) {
-        return userMapper.selectByPrimaryKey(uid);
-    }
-
-    public SUser findOneByUsername(String username) {
-        SUserExample example = new SUserExample();
-        example.createCriteria()
-                .andUsernameEqualTo(username);
-        List<SUser> list = userMapper.selectByExample(example);
-
-        return list.isEmpty() ? null : list.get(0);
-    }
-
-
+    /**
+     *
+     * @param mark
+     * @param map
+     * @return
+     */
+    Map<String, String> login(Integer mark, Map<String, String> map);
 }

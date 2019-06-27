@@ -2,14 +2,16 @@ package com.shiki.service;
 
 import com.github.pagehelper.PageInfo;
 import com.shiki.domain.dto.SText;
+import com.shiki.service.impl.PermsServiceImpl;
+import com.shiki.service.impl.RoleServiceImpl;
+import com.shiki.service.impl.TextServiceImpl;
+import com.shiki.service.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.time.ZonedDateTime;
 
 /**
  * @author 孙磊
@@ -22,16 +24,16 @@ import java.time.ZonedDateTime;
 public class PermsServiceTest {
 
     @Autowired
-    private PermsService permsService;
+    private PermsServiceImpl permsService;
 
     @Autowired
-    private TextService textService;
+    private TextServiceImpl textService;
 
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @Autowired
-    private RoleService roleService;
+    private RoleServiceImpl roleService;
 
     @Test
     public void findAllByRoleId() {
@@ -40,7 +42,7 @@ public class PermsServiceTest {
 
     @Test
     public void findOneByTestId() {
-        System.out.println(textService.findOneByTestId(2));
+        System.out.println(textService.findOneByTestId(2L));
     }
 
 
@@ -48,7 +50,7 @@ public class PermsServiceTest {
     public void findAll() {
         PageInfo<SText> page = textService.findAll(1, 10,true);
         System.out.println(page);
-        page.getList().forEach(System.out::println);
+//        page.getList().forEach(System.out::println);
     }
 
 

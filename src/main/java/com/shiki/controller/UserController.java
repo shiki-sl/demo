@@ -2,16 +2,15 @@ package com.shiki.controller;
 
 import com.shiki.common.Enum.Message;
 import com.shiki.common.result.Result;
-import com.shiki.domain.dto.SRole;
 import com.shiki.domain.dto.SUser;
 import com.shiki.service.RoleService;
 import com.shiki.service.UserService;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,10 +18,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.View;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -41,18 +38,21 @@ public class UserController {
     @Autowired
     private RoleService roleService;
 
-    @RequiresAuthentication
-    @GetMapping("/findAll")
-    @ResponseBody
-    public Result findAll() {
-        List<SUser> userList = userService.findAll();
-        return new Result(true, Message.SUCCESS, userList);
-    }
-
+    /**
+     * 根据用户id查看用户详细信息，只有拥有test权限角色可以访问到
+     *
+     * @param userId
+     * @return
+     */
     @RequiresRoles("test")
     @GetMapping("/findOneByUserId/{userId}")
     @ResponseBody
     public Result findOneByUserId(@PathVariable Integer userId) {
+        if (userId == null
+                || StringUtils.isBlank(userId.toString())) {
+            return new Result(false, Message.FAILURE, "文章id或删除状态为空");
+        }
+
         SUser user = userService.findOneByUserId(userId);
         if (user != null) {
             return new Result(true, Message.SUCCESS, user);
@@ -60,20 +60,30 @@ public class UserController {
         return new Result(false, Message.FAILURE, null);
     }
 
-
+    /**
+     * 测试
+     *
+     * @return
+     */
     @RequestMapping("/hello")
     public String hello() {
         System.out.println("hello");
         return "index";
     }
 
-    @RequiresRoles("root")
-    @GetMapping("/findAllRoleByUserId/{userId}")
-    @ResponseBody
-    public Result findAllRoleByUserId(@PathVariable Integer userId) {
-        List<SRole> roleList = roleService.findAllByUserId(userId);
-        return new Result(true, Message.SUCCESS, roleList);
-    }
+
+///    /**
+//     * 根据用户id查询用户所拥有的角色,只有root角色可以访问
+//     * @param userId
+//     * @return
+//     */
+//    @RequiresRoles("root")
+//    @GetMapping("/findAllRoleByUserId/{userId}")
+//    @ResponseBody
+//    public Result findAllRoleByUserId(@PathVariable Integer userId) {
+//        List<SRole> roleList = roleService.findAllByUserId(userId);
+//        return new Result(true, Message.SUCCESS, roleList);
+//    }
 
     /**
      * 根据mark模拟登陆
@@ -84,39 +94,25 @@ public class UserController {
     @GetMapping("/login")
     public ModelAndView login(Integer mark, ModelAndView mv) {
         Map<String, String> map = new HashMap<>(16);
-        if (mark == null) {
+        if (mark == null
+                || StringUtils.isBlank(mark.toString())) {
             map.put("未登录,请登录", "");
             mv.setViewName("login");
             mv.addAllObjects(map);
             return mv;
         }
-        switch (mark) {
-            case 1: {
-                map.put("username", "root");
-                map.put("password", "1");
-            }
-            break;
-            case 2: {
-                map.put("username", "test_user");
-                map.put("password", "123456");
-            }
-            break;
-            case 3: {
-                map.put("username", "user1");
-                map.put("password", "1");
-            }
-            break;
-            default:
-        }
-        Subject subject = SecurityUtils.getSubject();
-        UsernamePasswordToken token = new UsernamePasswordToken(map.get("username"), map.get("password"));
-        subject.login(token);
+        map = userService.login(mark, map);
+
         mv.setViewName("index");
         mv.addAllObjects(map);
         return mv;
     }
 
-    //登出
+    /**
+     * 登出
+     *
+     * @return
+     */
     @RequiresAuthentication
     @RequestMapping("/logout")
     public String logout() {

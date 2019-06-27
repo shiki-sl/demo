@@ -7,12 +7,11 @@ import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 
 import java.util.LinkedHashMap;
 
 /**
- * @author shiki
+ * @author 孙磊
  */
 @Configuration
 public class ShiroConfig {

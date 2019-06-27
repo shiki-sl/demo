@@ -2,7 +2,6 @@ package com.shiki.service;
 
 import com.shiki.domain.dao.SPermsMapper;
 import com.shiki.domain.dto.SPerms;
-import com.shiki.domain.dto.SRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,16 +13,11 @@ import java.util.List;
  * @date 2019/6/20 18:37
  */
 @Service
-public class PermsService {
-    @Autowired
-    private  SPermsMapper permsMapper;
+public interface PermsService {
 
 
-    public List<SPerms> findAllByRoleId(Integer roleId){
-        return permsMapper.findAllByRoleId(roleId);
-    }
 
-    public List<String> findPermsByUserId(Integer userId){
-        return permsMapper.findPermsByUserId(userId);
-    }
+     List<SPerms> findAllByRoleId(Integer roleId);
+
+     List<String> findPermsByUserId(Integer userId);
 }
