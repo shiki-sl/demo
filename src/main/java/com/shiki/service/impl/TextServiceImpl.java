@@ -9,6 +9,7 @@ import com.shiki.domain.dto.SText;
 import com.shiki.domain.dto.STextExample;
 import com.shiki.domain.dto.SUser;
 import com.shiki.service.TextService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,13 +55,13 @@ public class TextServiceImpl implements TextService {
 
 
     @Override
-    public int rootUpdateById(Long textId, Boolean isDelete) {
+    public int rootUpdateById(Long textId, Byte isDelete) {
         SText text = textMapper.selectByPrimaryKey(textId);
         if (text == null) {
             return 0;
         }
         text.setUpdateTime(System.currentTimeMillis());
-        text.setIsDelete((byte) (isDelete ? 1 : 0));
+        text.setIsDelete(isDelete);
         return textMapper.updateByPrimaryKey(text);
     }
 
@@ -68,16 +69,15 @@ public class TextServiceImpl implements TextService {
     public Result saveText(SText text) {
         SUser user = (SUser) SecurityUtils.getSubject().getPrincipal();
 
-        //当前登录用户与文章拥有用户不一致
-        if (!text.getUserId().equals(user.getUserId())) {
-            return new Result(false, Message.FAILURE_NO_PERM, "不是该文章的拥有者无法修改文章");
+        if (user == null) {
+            return new Result(false, Message.FAILURE_NO_PERM, "未登录,请登录");
         }
 
         //根据textId来判断插入or更新
-        if (text.getTextId() == 0L) {
+        if (text.getTextId() == null) {
             return insert(text, user.getUserId());
         } else {
-            return update(text);
+            return update(text,user.getUserId());
         }
     }
 
@@ -89,7 +89,11 @@ public class TextServiceImpl implements TextService {
         return new Result(true, Message.SUCCESS, "插入文章成功");
     }
 
-    private Result update(SText text) {
+    private Result update(SText text, Long userId) {
+        //当前登录用户与文章拥有用户不一致
+        if (userId.equals(text.getUserId())) {
+            return new Result(false, Message.FAILURE_NO_PERM, "不是该文章的拥有者无法修改文章");
+        }
         text.setUpdateTime(System.currentTimeMillis());
         textMapper.updateByPrimaryKey(text);
         return new Result(true, Message.SUCCESS, "更新文章成功");

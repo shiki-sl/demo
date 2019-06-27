@@ -35,7 +35,7 @@ public interface TextService {
      * @param isDelete true删除,false不删除
      * @return
      */
-    int rootUpdateById(Long textId, Boolean isDelete);
+    int rootUpdateById(Long textId, Byte isDelete);
 
     /**
      * 更新文章方法,判断文章id是否存在对文章进行更新

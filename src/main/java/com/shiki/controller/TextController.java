@@ -66,7 +66,7 @@ public class TextController {
     @RequiresRoles("root")
     @GetMapping("/rootUpdateById")
     @ResponseBody
-    public Result rootUpdateById(Long textId, Boolean isDelete) {
+    public Result rootUpdateById(Long textId, Byte isDelete) {
         //todo:可以使用aop对参数统一进行非空校验
         if (textId == null
                 || isDelete == null
@@ -89,7 +89,7 @@ public class TextController {
 
     @PostMapping("saveText")
     @ResponseBody
-    public Result saveText(@RequestBody SText text) {
+    public Result saveText(SText text) {
         if (StringUtils.isBlank(text.getTitle())
                 || StringUtils.isBlank(text.getTitle())) {
             return new Result(false,Message.FAILURE,"文章标题或内容不能为空");

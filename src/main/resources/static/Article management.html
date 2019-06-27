@@ -23,14 +23,14 @@
             elem: '#demo'
             , height: 472
             , url: '/text/findAll' //数据接口
-            ,response: {
+            , response: {
                 // statusName: 'status' //规定数据状态的字段名称，默认：code
                 statusCode: 2000 //规定成功的状态码，默认：0
                 // ,msgName: 'hint' //规定状态信息的字段名称，默认：msg
                 // ,countName: 'total' //规定数据总数的字段名称，默认：count
                 // ,dataName: 'rows' //规定数据列表的字段名称，默认：data
             }
-            , parseData: function(res){ //res 即为原始返回的数据
+            , parseData: function (res) { //res 即为原始返回的数据
                 return {
                     "code": res.msg.code, //解析接口状态
                     "msg": res.msg.msg, //解析提示文本
@@ -56,7 +56,8 @@
         layui.form.on('switch(isDelete)', function (obj) {
             layui.$.get('text/rootUpdateById', {
                 textId: this.value
-                , isDelete: obj.elem.checked
+                //选中删除按钮传递值为1,取消删除按钮传递值为0
+                , isDelete: obj.elem.checked ? 1 : 0
             }, function (v) {
                 if (v.success) {
                     layer.tips(obj.elem.checked ? "删除该文章成功" : "恢复该文章成功", obj.othis);
