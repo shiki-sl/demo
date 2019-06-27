@@ -15,7 +15,7 @@ public interface TextService {
      *
      * @param pageNum  自第几页开始查询
      * @param pageSize 每页展示数量
-     * @param flag     是否查询在数据库中被删除的文章,只有root用户可以查询 true未拥有root权限,false为未拥有root权限
+     * @param flag     是否查询在数据库中被删除的文章,只有root用户可以查询 true为拥有root权限,false为未拥有root权限
      * @return
      */
      PageInfo<SText> findAll(Integer pageNum, Integer pageSize, boolean flag) ;

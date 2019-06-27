@@ -45,8 +45,10 @@ public class TextController {
                 || StringUtils.isBlank(pageSize.toString())) {
             return new Result(false, Message.FAILURE, "文章id或删除状态为空");
         }
+
         PageInfo<SText> textList;
         boolean root = SecurityUtils.getSubject().hasRole("root");
+
         textList = textService.findAll(pageNum, pageSize, root);
         LayuiTableVo layuiTableVo = new LayuiTableVo(textList.getList(), textList.getTotal());
 
