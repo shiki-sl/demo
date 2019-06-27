@@ -5,7 +5,6 @@ import com.shiki.common.result.Result;
 import com.shiki.domain.dto.SUser;
 import com.shiki.service.RoleService;
 import com.shiki.service.UserService;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;

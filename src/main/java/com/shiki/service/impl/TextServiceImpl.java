@@ -32,7 +32,6 @@ public class TextServiceImpl implements TextService {
         }
 
         PageHelper.startPage(pageNum, pageSize);
-
         return new PageInfo<>(textMapper.selectByExampleWithBLOBs(example));
     }
 

@@ -32,7 +32,7 @@ public interface TextService {
      * 只有root角色可以查询全部文章 并修改文章的删除状态
      *
      * @param textId
-     * @param isDelete
+     * @param isDelete true删除,false不删除
      * @return
      */
      int rootUpdateById(Long textId, Boolean isDelete) ;
